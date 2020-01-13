@@ -1,0 +1,11 @@
+[build-system]
+requires = ["flit_core >=2,<3"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+module = "polyswarm_transaction"
+author = "PolySwarm Developers"
+author-email = "info@polyswarm.io"
+home-page = "https://github.com/polyswarm/polyswarm-transaction"
+classifiers = ["License :: OSI Approved :: Apache Software License"]
+
