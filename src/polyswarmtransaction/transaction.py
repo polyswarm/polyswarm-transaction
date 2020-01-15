@@ -1,4 +1,5 @@
 import json
+import base64
 
 from eth_keys.datatypes import PrivateKey, Signature
 from eth_keys.exceptions import ValidationError
@@ -11,34 +12,48 @@ from polyswarmtransaction.exceptions import InvalidKeyError, InvalidSignatureErr
 
 
 class Transaction:
+    @staticmethod
+    def hash(message: bytes) -> bytes:
+        return Web3.keccak(message)
+
     @property
     def data(self) -> Dict[str, Any]:
         return {}
 
-    @property
-    def hashed(self) -> bytes:
-        return Web3.keccak(text=json.dumps(self.data))
+    def message(self):
+        return base64.b64encode(json.dumps({"name": self.__class__.__name__, "data": self.data}).encode('utf-8'))
 
     def sign(self, private_key: HexBytes) -> 'SignedTransaction':
+        message = self.message()
+        signature = Transaction.sign_message(message, private_key)
+        return SignedTransaction(message, signature.to_bytes())
+
+    @staticmethod
+    def sign_message(message: bytes, private_key: HexBytes):
         try:
-            signature = PrivateKey(private_key).sign_msg_hash(self.hashed)
+            return PrivateKey(private_key).sign_msg_hash(Transaction.hash(message))
         except ValidationError:
             raise InvalidKeyError(f'{private_key} is not a valid ethereum private key')
-        return SignedTransaction(self, signature.to_bytes())
 
 
 class SignedTransaction:
-    transaction: Transaction
+    body: HexBytes
     signature: HexBytes
 
-    def __init__(self, transaction: Transaction, signature: Union[bytes, str, int]):
-        self.transaction = transaction
+    def __init__(self, body: Union[bytes, str, int], signature: Union[bytes, str, int]):
+        self.body = HexBytes(body)
         self.signature = HexBytes(signature)
+
+    def output(self):
+        return {
+            "body": self.body.hex(),
+            "signature": self.signature.hex()
+        }
 
     def ecrecover(self) -> ChecksumAddress:
         try:
-            signature = Signature(signature_bytes=bytes(self.signature))
+            signature = Signature(signature_bytes=self.signature)
         except (TypeError, ValidationError):
             raise InvalidSignatureError(f'{self.signature} is not a valid signature')
 
-        return signature.recover_public_key_from_msg_hash(self.transaction.hashed).to_checksum_address()
+        return signature.recover_public_key_from_msg_hash(Transaction.hash(self.body)).to_checksum_address()
