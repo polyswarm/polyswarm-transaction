@@ -2,12 +2,6 @@
 # -*- coding: utf-8 -*-
 from setuptools import find_packages, setup
 
-
-def parse_requirements():
-    with open('requirements.txt', 'r') as f:
-        return ['{2} @ {0}'.format(*r.partition('#egg=')) if '#egg=' in r else r for r in f.read().splitlines()]
-
-
 # The README.md will be used as the content for the PyPi package details page on the Python Package Index.
 with open("README.md", "r") as readme:
     long_description = readme.read()
@@ -16,7 +10,7 @@ with open("README.md", "r") as readme:
 setup(
     name='polyswarm-transaction',
     version='0.1.0',
-    description='Library for building & signing transactions for the PolySwarmd sidechain',
+    description='Library for building & signing transactions for the PolySwarm sidechain',
     long_description=long_description,
     long_description_content_type="text/markdown",
     author='PolySwarm Developers',
@@ -24,7 +18,9 @@ setup(
     url='https://github.com/polyswarm/polyswarm-transaction',
     license='MIT',
     python_requires='>=3.6,<4',
-    install_requires=parse_requirements(),
+    install_requires=[
+        'web3==5.4.0'
+    ],
     include_package_data=True,
     packages=find_packages('src'),
     package_dir={'': 'src/'},
