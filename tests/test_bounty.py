@@ -5,10 +5,12 @@ from web3 import Web3
 
 from polyswarmartifact import ArtifactType
 from polyswarmartifact.schema.bounty import Bounty as BountyMetadata
+from polyswarmartifact.schema.verdict import Verdict as VerdictMetadata
 from polyswarmtransaction.transaction import SignedTransaction
-from polyswarmtransaction.bounty import BountyTransaction, AssertTransaction, VoteTransaction
+from polyswarmtransaction.bounty import BountyTransaction, AssertionTransaction
 
 BOUNTY_METADATA = BountyMetadata().add_file_artifact('')
+ASSERTION_METADATA = VerdictMetadata().set_malware_family('')
 
 
 def test_recover_bounty_when_computed(ethereum_accounts):
@@ -77,6 +79,71 @@ def test_recover_bounty_signed_transaction_from_parts():
 
 def test_recover_bounty_signed_transaction_from_signed_output(ethereum_accounts):
     transaction = BountyTransaction('test', "2000000000000000000", 'Qm', ArtifactType.FILE, BOUNTY_METADATA, 123)
+    signed = transaction.sign(ethereum_accounts[0].key)
+    signed = SignedTransaction(**signed.payload)
+    assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
+
+
+def test_recover_assertion_when_computed(ethereum_accounts):
+    data = {
+        'name': 'polyswarmtransaction.bounty:AssertionTransaction',
+        'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
+        'data': {
+            "guid": "test",
+            "verdict": True,
+            "bid": "1000000000000000000",
+            "metadata": {'malware_family': ''}
+         }
+    }
+    transaction = AssertionTransaction('test', True, "1000000000000000000", ASSERTION_METADATA)
+    signed = transaction.sign(ethereum_accounts[0].key)
+    assert signed.signature == PrivateKey(ethereum_accounts[0].key).sign_msg_hash(Web3.keccak(text=json.dumps(data)))
+
+
+def test_sign_assertion_transaction(ethereum_accounts):
+    signature = '0x0b2e16aff5f17c95434d06201514c20aed27d899649679cce01327afca495d3c17fc9f8f12551031aeae28a744be4fddf6' \
+                '8b46155b24472d6f9d0da0ffa5376c00'
+    data = {
+        'name': 'polyswarmtransaction.bounty:AssertionTransaction',
+        'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
+        'data': {
+            "guid": "test",
+            "verdict": True,
+            "bid": "1000000000000000000",
+            "metadata": {'malware_family': ''}
+        }
+    }
+    transaction = AssertionTransaction('test', True, "1000000000000000000", ASSERTION_METADATA)
+    signed = transaction.sign(ethereum_accounts[0].key)
+    assert signed.transaction == json.dumps(data)
+    assert signed.signature.hex() == signature
+
+
+def test_recover_assertion_signed_transaction(ethereum_accounts):
+    transaction = AssertionTransaction('test', True, "1000000000000000000", ASSERTION_METADATA)
+    signed = transaction.sign(ethereum_accounts[0].key)
+    assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
+
+
+def test_recover_assertion_signed_transaction_from_parts():
+    signature = '0x0b2e16aff5f17c95434d06201514c20aed27d899649679cce01327afca495d3c17fc9f8f12551031aeae28a744be4fddf6' \
+                '8b46155b24472d6f9d0da0ffa5376c00'
+    data = {
+        'name': 'polyswarmtransaction.bounty:AssertionTransaction',
+        'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
+        'data': {
+            "guid": "test",
+            "verdict": True,
+            "bid": "1000000000000000000",
+            "metadata": {'malware_family': ''}
+        }
+    }
+    signed = SignedTransaction(json.dumps(data), signature)
+    assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
+
+
+def test_recover_assertion_signed_transaction_from_signed_output(ethereum_accounts):
+    transaction = AssertionTransaction('test', True, "1000000000000000000", ASSERTION_METADATA)
     signed = transaction.sign(ethereum_accounts[0].key)
     signed = SignedTransaction(**signed.payload)
     assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'

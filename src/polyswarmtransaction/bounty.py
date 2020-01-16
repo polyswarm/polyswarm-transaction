@@ -36,3 +36,47 @@ class BountyTransaction(Transaction):
         }
 
 
+class AssertionTransaction(Transaction):
+    guid: uuid4
+    verdict: bool
+    bid: str
+    metadata: VerdictMetadata
+
+    def __init__(self, guid, verdict, bid, metadata):
+        self.guid = guid
+        self.verdict = verdict
+        self.bid = bid
+        self.metadata = metadata
+
+    @property
+    def data(self) -> Dict[str, Any]:
+        return {
+            'guid': str(self.guid),
+            'verdict': self.verdict,
+            'bid': self.bid,
+            'metadata': self.output_metadata()
+        }
+
+    def output_metadata(self):
+        metadata = self.metadata
+        result = {
+            "malware_family": metadata.malware_family,
+        }
+
+        if metadata.scanner:
+            result["scanner"] = metadata.scanner
+
+        if metadata.domains:
+            result['domains'] = metadata.domains
+
+        if metadata.ip_addresses:
+            result['ip_addresses'] = metadata.ip_addresses
+
+        if metadata.stix:
+            result['stix'] = metadata.stix
+
+        if metadata.extra:
+            for key, value in metadata.extra:
+                result[key] = value
+
+        return result
