@@ -1,10 +1,23 @@
 import json
 
 import pytest
+from eth_keys.datatypes import PrivateKey
 from hexbytes import HexBytes
 
 from polyswarmtransaction.exceptions import InvalidKeyError, InvalidSignatureError, WrongSignatureError
 from polyswarmtransaction.transaction import Transaction, SignedTransaction
+from web3 import Web3
+
+
+def test_recover_when_computed(ethereum_accounts):
+    # Must be a string exact match
+    expected_body = {
+        'name': 'polyswarmtransaction.transaction:Transaction',
+        'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
+        'data': {}
+    }
+    signed = Transaction().sign(ethereum_accounts[0].key)
+    assert signed.signature == PrivateKey(ethereum_accounts[0].key).sign_msg_hash(Web3.keccak(text=json.dumps(expected_body)))
 
 
 def test_sign_transaction(ethereum_accounts):
