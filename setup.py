@@ -19,6 +19,7 @@ setup(
     license='MIT',
     python_requires='>=3.6,<4',
     install_requires=[
+        'hexbytes==0.2.0',
         'web3==5.4.0'
     ],
     include_package_data=True,

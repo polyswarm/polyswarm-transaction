@@ -1,48 +1,55 @@
-import base64
 import json
 
 import pytest
-from eth_account.signers.local import LocalAccount
-from eth_keys.exceptions import BadSignature
-from web3.auto import w3
+from hexbytes import HexBytes
 
-from polyswarmtransaction.exceptions import InvalidKeyError, InvalidSignatureError
+from polyswarmtransaction.exceptions import InvalidKeyError, InvalidSignatureError, WrongSignatureError
 from polyswarmtransaction.transaction import Transaction, SignedTransaction
 
 
-@pytest.fixture
-def ethereum_account() -> LocalAccount:
-    return w3.eth.account.from_key(bytes([0] * 32))
-
-
-def test_sign_transaction(ethereum_account):
-    expected = '0x02ce51e1210856898317649d643cfc8e28f451a17c463a2c4d3653fac505e3c17858aba69adc41bc81ac69fe31ae7c0c125' \
-               'ff4648e1cf19b7dce0074759414bf01'
-    expected_data = base64.b64encode(json.dumps({'name': 'Transaction', 'data': {}}).encode('utf-8'))
+def test_sign_transaction(ethereum_accounts):
+    expected = '0xed2e8602439eec57a84bb372c6de718d88d2c27f265d7c01fe59a940f9c44eb25f849639669897e376dca6b3e745f4d9667' \
+               '32f731b6ec20d908673ad882aeed301'
+    expected_body = {
+        'name': 'polyswarmtransaction.transaction:Transaction',
+        'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
+        'data': {}
+    }
     transaction = Transaction()
-    signed = transaction.sign(ethereum_account.key)
-    assert signed.body == expected_data
+    signed = transaction.sign(ethereum_accounts[0].key)
+    assert json.loads(signed.transaction) == expected_body
     assert signed.signature.hex() == expected
 
 
-def test_recover_signed_transaction(ethereum_account):
+def test_recover_signed_transaction(ethereum_accounts):
     transaction = Transaction()
-    signed = transaction.sign(ethereum_account.key)
+    signed = transaction.sign(ethereum_accounts[0].key)
     assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
 
 
 def test_recover_signed_transaction_from_parts():
-    signature = '0x02ce51e1210856898317649d643cfc8e28f451a17c463a2c4d3653fac505e3c17858aba69adc41bc81ac69fe31ae7c0c125' \
-               'ff4648e1cf19b7dce0074759414bf01'
-    body = base64.b64encode(json.dumps({'name': 'Transaction', 'data': {}}).encode('utf-8'))
-    signed = SignedTransaction(body, signature)
+    signature = '0xed2e8602439eec57a84bb372c6de718d88d2c27f265d7c01fe59a940f9c44eb25f849639669897e376dca6b3e745f4d9667' \
+               '32f731b6ec20d908673ad882aeed301'
+    # Must be a string exact match
+    transaction = '{' \
+           '"name": "polyswarmtransaction.transaction:Transaction", ' \
+           '"from": "0x3f17f1962B36e491b30A40b2405849e597Ba5FB5", ' \
+           '"data": {}}'
+    signed = SignedTransaction(transaction, signature)
     assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
 
 
-def test_recover_signed_transaction_from_signed_output(ethereum_account):
+def test_recover_signed_transaction_from_signed_output(ethereum_accounts):
     transaction = Transaction()
-    signed = transaction.sign(ethereum_account.key)
-    signed = SignedTransaction(**signed.output())
+    signed = transaction.sign(ethereum_accounts[0].key)
+    signed = SignedTransaction(signed.transaction, signed.signature)
+    assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
+
+
+def test_recover_signed_transaction_from_payload(ethereum_accounts):
+    transaction = Transaction()
+    signed = transaction.sign(ethereum_accounts[0].key)
+    signed = SignedTransaction(**signed.payload)
     assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
 
 
@@ -53,18 +60,36 @@ def test_sign_none():
 
 
 def test_recover_empty_signature():
-    signed = SignedTransaction(b'', '')
+    signed = SignedTransaction('', '')
     with pytest.raises(InvalidSignatureError):
         signed.ecrecover()
 
 
 def test_recover_invalid_signature():
-    signed = SignedTransaction(b'', '0xaa')
+    signed = SignedTransaction('', '0xaa')
     with pytest.raises(InvalidSignatureError):
         signed.ecrecover()
 
 
-def test_recover_wrong_signature():
-    signed = SignedTransaction(b'', bytes([0] * 65))
-    with pytest.raises(BadSignature):
+def test_recover_changed_body(ethereum_accounts):
+    signature = Transaction().sign(ethereum_accounts[0].key).signature
+    body = '{' \
+           '"name": "polyswarmtransaction.transaction:Transaction", ' \
+           '"from": "0x3f17f1962B36e491b30A40b2405849e597Ba5FB5", ' \
+               '"data": {' \
+                   '"different": "asdf"' \
+               '}' \
+           '}'
+    signed = SignedTransaction(body, signature)
+
+    with pytest.raises(WrongSignatureError):
+        signed.ecrecover()
+
+
+def test_recover_changed_signature(ethereum_accounts):
+    transaction = Transaction().sign(HexBytes(ethereum_accounts[0].key)).transaction
+    signature = Transaction().sign(ethereum_accounts[1].key).signature
+    signed = SignedTransaction(transaction, signature)
+
+    with pytest.raises(WrongSignatureError):
         signed.ecrecover()

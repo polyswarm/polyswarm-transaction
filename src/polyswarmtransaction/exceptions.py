@@ -8,3 +8,7 @@ class InvalidKeyError(PolySwarmTransactionException):
 
 class InvalidSignatureError(PolySwarmTransactionException):
     pass
+
+
+class WrongSignatureError(PolySwarmTransactionException):
+    pass
