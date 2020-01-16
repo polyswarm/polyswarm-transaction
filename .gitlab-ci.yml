@@ -18,15 +18,27 @@ variables:
 ###############################################################
 # Test Stage
 ###############################################################
-test:
+test-py36:
   image: python:3.6
   stage: test
   tags:
     - kube
   before_script:
-    - pip install -r requirements.txt
+    - pip3 install tox
   script:
-    pytest -s --cov=polyswarmtransaction
+    - tox -e py36
+  except:
+    - images
+
+test-py37:
+  image: python:3.7
+  stage: test
+  tags:
+    - kube
+  before_script:
+    - pip3 install tox
+  script:
+    - tox -e py37
   except:
     - images
 
