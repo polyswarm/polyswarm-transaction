@@ -11,13 +11,13 @@ from web3 import Web3
 
 def test_recover_when_computed(ethereum_accounts):
     # Must be a string exact match
-    expected_body = {
+    data = {
         'name': 'polyswarmtransaction.transaction:Transaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
         'data': {}
     }
     signed = Transaction().sign(ethereum_accounts[0].key)
-    assert signed.signature == PrivateKey(ethereum_accounts[0].key).sign_msg_hash(Web3.keccak(text=json.dumps(expected_body)))
+    assert signed.signature == PrivateKey(ethereum_accounts[0].key).sign_msg_hash(Web3.keccak(text=json.dumps(data)))
 
 
 def test_sign_transaction(ethereum_accounts):
