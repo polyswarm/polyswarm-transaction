@@ -12,9 +12,3 @@ class WithdrawalTransaction(Transaction):
     @property
     def data(self) -> Dict[str, Any]:
         return {'amount': self.amount}
-
-
-
-
-
-
