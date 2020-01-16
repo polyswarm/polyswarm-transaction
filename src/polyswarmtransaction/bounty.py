@@ -80,3 +80,18 @@ class AssertionTransaction(Transaction):
                 result[key] = value
 
         return result
+
+class VoteTransaction(Transaction):
+    guid: uuid4
+    vote: bool
+
+    def __init__(self, guid, vote):
+        self.guid = guid
+        self.vote = vote
+
+    @property
+    def data(self) -> Dict[str, Any]:
+        return {
+            'guid': str(self.guid),
+            'vote': self.vote,
+        }

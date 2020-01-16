@@ -7,7 +7,7 @@ from polyswarmartifact import ArtifactType
 from polyswarmartifact.schema.bounty import Bounty as BountyMetadata
 from polyswarmartifact.schema.verdict import Verdict as VerdictMetadata
 from polyswarmtransaction.transaction import SignedTransaction
-from polyswarmtransaction.bounty import BountyTransaction, AssertionTransaction
+from polyswarmtransaction.bounty import BountyTransaction, AssertionTransaction, VoteTransaction
 
 BOUNTY_METADATA = BountyMetadata().add_file_artifact('')
 ASSERTION_METADATA = VerdictMetadata().set_malware_family('')
@@ -144,6 +144,65 @@ def test_recover_assertion_signed_transaction_from_parts():
 
 def test_recover_assertion_signed_transaction_from_signed_output(ethereum_accounts):
     transaction = AssertionTransaction('test', True, "1000000000000000000", ASSERTION_METADATA)
+    signed = transaction.sign(ethereum_accounts[0].key)
+    signed = SignedTransaction(**signed.payload)
+    assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
+
+
+def test_recover_vote_when_computed(ethereum_accounts):
+    data = {
+        'name': 'polyswarmtransaction.bounty:VoteTransaction',
+        'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
+        'data': {
+            "guid": "test",
+            "vote": True,
+         }
+    }
+    transaction = VoteTransaction('test', True)
+    signed = transaction.sign(ethereum_accounts[0].key)
+    assert signed.signature == PrivateKey(ethereum_accounts[0].key).sign_msg_hash(Web3.keccak(text=json.dumps(data)))
+
+
+def test_sign_vote_transaction(ethereum_accounts):
+    signature = '0xc04b6d31e94c26faa039b899e4c58adecc74bff57b3985668f5ba59ce27a0bf301d41b1b07a1117d6c16d6bb31a44da680' \
+                'e215178c121988462be4891d86935101'
+    data = {
+        'name': 'polyswarmtransaction.bounty:VoteTransaction',
+        'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
+        'data': {
+            "guid": "test",
+            "vote": True,
+        }
+    }
+    transaction = VoteTransaction('test', True)
+    signed = transaction.sign(ethereum_accounts[0].key)
+    assert signed.transaction == json.dumps(data)
+    assert signed.signature.hex() == signature
+
+
+def test_recover_vote_signed_transaction(ethereum_accounts):
+    transaction = VoteTransaction('test', True)
+    signed = transaction.sign(ethereum_accounts[0].key)
+    assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
+
+
+def test_recover_vote_signed_transaction_from_parts():
+    signature = '0xc04b6d31e94c26faa039b899e4c58adecc74bff57b3985668f5ba59ce27a0bf301d41b1b07a1117d6c16d6bb31a44da680' \
+                'e215178c121988462be4891d86935101'
+    data = {
+        'name': 'polyswarmtransaction.bounty:VoteTransaction',
+        'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
+        'data': {
+            "guid": "test",
+            "vote": True,
+        }
+    }
+    signed = SignedTransaction(json.dumps(data), signature)
+    assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
+
+
+def test_recover_vote_signed_transaction_from_signed_output(ethereum_accounts):
+    transaction = VoteTransaction('test', True)
     signed = transaction.sign(ethereum_accounts[0].key)
     signed = SignedTransaction(**signed.payload)
     assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
