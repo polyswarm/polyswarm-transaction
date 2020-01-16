@@ -100,6 +100,47 @@ def test_recover_assertion_when_computed(ethereum_accounts):
     assert signed.signature == PrivateKey(ethereum_accounts[0].key).sign_msg_hash(Web3.keccak(text=json.dumps(data)))
 
 
+def test_sign_full_metadata(ethereum_accounts):
+    data = {
+        'name': 'polyswarmtransaction.bounty:AssertionTransaction',
+        'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
+        'data': {
+            "guid": "test",
+            "verdict": True,
+            "bid": "1000000000000000000",
+            "metadata": {
+                'malware_family': '',
+                'scanner': {
+                    'environment': {
+                        'operating_system': 'test-os',
+                        'architecture': 'test-arch',
+                    },
+                    'polyswarmclient_version': '2.8.0',
+                    'version': '1.0.0',
+                    'signatures_version': '0.1.0',
+                    'vendor_version': '1'
+                },
+                'domains': ['test-domain'],
+                'ip_addresses': ['127.0.0.1'],
+                'stix': [{'schema': '', 'signature': 'test-stix'}],
+                'extra': 'extra'
+            }
+         }
+    }
+    metadata = VerdictMetadata()\
+        .set_malware_family('')\
+        .set_scanner('test-os', 'test-arch', '1.0.0', '2.8.0', '0.1.0', '1')\
+        .add_domain('test-domain')\
+        .add_ip_address('127.0.0.1')\
+        .add_stix_signature('', 'test-stix')\
+        .add_extra('extra', 'extra')
+
+    transaction = AssertionTransaction('test', True, "1000000000000000000", metadata)
+    signed = transaction.sign(ethereum_accounts[0].key)
+    assert signed.transaction == json.dumps(data)
+    assert signed.signature == PrivateKey(ethereum_accounts[0].key).sign_msg_hash(Web3.keccak(text=json.dumps(data)))
+
+
 def test_sign_assertion_transaction(ethereum_accounts):
     signature = '0x0b2e16aff5f17c95434d06201514c20aed27d899649679cce01327afca495d3c17fc9f8f12551031aeae28a744be4fddf6' \
                 '8b46155b24472d6f9d0da0ffa5376c00'
