@@ -3,7 +3,6 @@ import json
 from eth_keys.datatypes import PrivateKey
 from web3 import Web3
 
-from polyswarmartifact import ArtifactType
 from polyswarmtransaction.transaction import SignedTransaction
 from polyswarmtransaction.nectar import WithdrawalTransaction
 

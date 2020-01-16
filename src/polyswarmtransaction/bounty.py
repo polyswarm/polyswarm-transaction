@@ -1,4 +1,3 @@
-import json
 from typing import Dict, Any
 from uuid import uuid4
 
@@ -80,6 +79,7 @@ class AssertionTransaction(Transaction):
                 result[key] = value
 
         return result
+
 
 class VoteTransaction(Transaction):
     guid: uuid4

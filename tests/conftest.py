@@ -1,8 +1,7 @@
-from typing import List
-
 import pytest
 
 from eth_account.signers.local import LocalAccount
+from typing import List
 from web3.auto import w3
 
 

@@ -4,8 +4,8 @@ from eth_keys.datatypes import PrivateKey, Signature, PublicKey
 from eth_keys.exceptions import ValidationError, BadSignature
 from eth_typing import ChecksumAddress
 from hexbytes import HexBytes
+from typing import Any, Dict, Union
 from web3 import Web3
-from typing import Any, Dict, Union, Tuple
 
 from polyswarmtransaction.exceptions import InvalidKeyError, InvalidSignatureError, WrongSignatureError
 

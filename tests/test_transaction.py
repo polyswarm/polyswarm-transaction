@@ -3,10 +3,10 @@ import json
 import pytest
 from eth_keys.datatypes import PrivateKey
 from hexbytes import HexBytes
+from web3 import Web3
 
 from polyswarmtransaction.exceptions import InvalidKeyError, InvalidSignatureError, WrongSignatureError
 from polyswarmtransaction.transaction import Transaction, SignedTransaction
-from web3 import Web3
 
 
 def test_recover_when_computed(ethereum_accounts):
