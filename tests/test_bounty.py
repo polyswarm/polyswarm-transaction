@@ -1,5 +1,6 @@
 import json
 
+import pytest
 from eth_keys.datatypes import PrivateKey
 from web3 import Web3
 
@@ -101,6 +102,24 @@ def test_load_bounty():
     assert isinstance(signed.transaction(), BountyTransaction)
     assert signed.transaction().data == \
         BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.name, BOUNTY_METADATA, 123).data
+
+
+def test_load_bounty_bad_metadata():
+    data = {
+        'name': 'polyswarmtransaction.bounty:BountyTransaction',
+        'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
+        'data': {
+            'guid': 'test',
+            'reward': '2000000000000000000',
+            'artifact': 'Qm',
+            'artifact_type': 'FILE',
+            'expiration': 123,
+            'metadata': []
+        }
+    }
+    signed = SignedTransaction(json.dumps(data), bytes([0] * 65))
+    with pytest.raises(ValueError):
+        assert signed.transaction()
 
 
 def test_recover_assertion_when_computed(ethereum_accounts):
@@ -224,6 +243,22 @@ def test_load_assertion():
     assert isinstance(signed.transaction(), AssertionTransaction)
     assert signed.transaction().data == \
         AssertionTransaction('test', True, '1000000000000000000', ASSERTION_METADATA).data
+
+
+def test_load_assertion_bad_metadata():
+    data = {
+        'name': 'polyswarmtransaction.bounty:AssertionTransaction',
+        'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
+        'data': {
+            'guid': 'test',
+            'verdict': True,
+            'bid': '1000000000000000000',
+            'metadata': {}
+        }
+    }
+    signed = SignedTransaction(json.dumps(data), bytes([0] * 65))
+    with pytest.raises(ValueError):
+        assert signed.transaction()
 
 
 def test_recover_vote_when_computed(ethereum_accounts):
