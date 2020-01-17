@@ -1,3 +1,4 @@
+import dataclasses
 import json
 import importlib
 import importlib.util
@@ -36,10 +37,11 @@ TRANSACTION_SCHEMA = {
 }
 
 
+@dataclasses.dataclass(init=True)
 class Transaction:
     @property
     def data(self) -> Dict[str, Any]:
-        return {}
+        return dataclasses.asdict(self)
 
     def sign(self, private_key: HexBytes) -> 'SignedTransaction':
         key = self.load_key(private_key)

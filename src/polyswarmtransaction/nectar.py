@@ -1,14 +1,8 @@
-from typing import Dict, Any
+import dataclasses
 
 from polyswarmtransaction.transaction import Transaction
 
 
+@dataclasses.dataclass(init=True)
 class WithdrawalTransaction(Transaction):
     amount: str
-
-    def __init__(self, amount, **kwargs):
-        self.amount = amount
-
-    @property
-    def data(self) -> Dict[str, Any]:
-        return {'amount': self.amount}
