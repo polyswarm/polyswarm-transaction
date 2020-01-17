@@ -9,8 +9,8 @@ from polyswarmartifact.schema.verdict import Verdict as VerdictMetadata
 from polyswarmtransaction.transaction import SignedTransaction
 from polyswarmtransaction.bounty import BountyTransaction, AssertionTransaction, VoteTransaction
 
-BOUNTY_METADATA = BountyMetadata().add_file_artifact('')
-ASSERTION_METADATA = VerdictMetadata().set_malware_family('')
+BOUNTY_METADATA = json.loads(BountyMetadata().add_file_artifact('').json())
+ASSERTION_METADATA = json.loads(VerdictMetadata().set_malware_family('').json())
 
 
 def test_recover_bounty_when_computed(ethereum_accounts):
@@ -26,7 +26,7 @@ def test_recover_bounty_when_computed(ethereum_accounts):
             'metadata': [{'mimetype': ''}]
          }
     }
-    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE, BOUNTY_METADATA, 123)
+    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.name, BOUNTY_METADATA, 123)
     signed = transaction.sign(ethereum_accounts[0].key)
     assert signed.signature == PrivateKey(ethereum_accounts[0].key).sign_msg_hash(Web3.keccak(text=json.dumps(data)))
 
@@ -46,14 +46,14 @@ def test_sign_bounty_transaction(ethereum_accounts):
             'metadata': [{'mimetype': ''}]
         }
     }
-    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE, BOUNTY_METADATA, 123)
+    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.name, BOUNTY_METADATA, 123)
     signed = transaction.sign(ethereum_accounts[0].key)
     assert signed.raw_transaction == json.dumps(data)
     assert signed.signature.hex() == signature
 
 
 def test_recover_bounty_signed_transaction(ethereum_accounts):
-    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE, BOUNTY_METADATA, 123)
+    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.name, BOUNTY_METADATA, 123)
     signed = transaction.sign(ethereum_accounts[0].key)
     assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
 
@@ -78,7 +78,7 @@ def test_recover_bounty_signed_transaction_from_parts():
 
 
 def test_recover_bounty_signed_transaction_from_signed_output(ethereum_accounts):
-    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE, BOUNTY_METADATA, 123)
+    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.name, BOUNTY_METADATA, 123)
     signed = transaction.sign(ethereum_accounts[0].key)
     signed = SignedTransaction(**signed.payload)
     assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
@@ -100,7 +100,7 @@ def test_load_bounty():
     signed = SignedTransaction(json.dumps(data), bytes([0] * 65))
     assert isinstance(signed.transaction(), BountyTransaction)
     assert signed.transaction().data == \
-        BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE, BOUNTY_METADATA, 123).data
+        BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.name, BOUNTY_METADATA, 123).data
 
 
 def test_recover_assertion_when_computed(ethereum_accounts):
@@ -146,13 +146,13 @@ def test_sign_full_metadata(ethereum_accounts):
             }
          }
     }
-    metadata = VerdictMetadata()\
+    metadata = json.loads(VerdictMetadata()\
         .set_malware_family('')\
         .set_scanner('test-os', 'test-arch', '1.0.0', '2.8.0', '0.1.0', '1')\
         .add_domain('test-domain')\
         .add_ip_address('127.0.0.1')\
         .add_stix_signature('', 'test-stix')\
-        .add_extra('extra', 'extra')
+        .add_extra('extra', 'extra').json())
 
     transaction = AssertionTransaction('test', True, '1000000000000000000', metadata)
     signed = transaction.sign(ethereum_accounts[0].key)
