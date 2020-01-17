@@ -47,7 +47,7 @@ By default the following transactions are already defined.
 1. `nectar.WithdrawalTransaction` 
 
 Using the `sign()` method, these transactions will be transformed into a json string and signature.
-This signature can be verified the `ecrecover` method on `SignedTransaction
+This signature can be verified the `ecrecover` method on `SignedTransaction`
 
 
 ### Build Transactions
