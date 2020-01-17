@@ -6,7 +6,7 @@ from polyswarmtransaction.transaction import Transaction
 class WithdrawalTransaction(Transaction):
     amount: str
 
-    def __init__(self, amount):
+    def __init__(self, amount, **kwargs):
         self.amount = amount
 
     @property

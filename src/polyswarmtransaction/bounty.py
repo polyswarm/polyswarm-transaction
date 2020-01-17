@@ -15,11 +15,14 @@ class BountyTransaction(Transaction):
     artifact_type: ArtifactType
     metadata: BountyMetadata
 
-    def __init__(self, guid, reward, artifact, artifact_type, metadata, expiration):
+    def __init__(self, guid: uuid4, reward: str , artifact: str, artifact_type: ArtifactType, metadata: BountyMetadata, expiration: int, **kwargs):
         self.guid = guid
         self.reward = reward
         self.artifact = artifact
         self.artifact_type = artifact_type
+        if not isinstance(metadata, BountyMetadata):
+            raise ValueError()
+
         self.metadata = metadata
         self.expiration = expiration
 
@@ -41,10 +44,12 @@ class AssertionTransaction(Transaction):
     bid: str
     metadata: VerdictMetadata
 
-    def __init__(self, guid, verdict, bid, metadata):
+    def __init__(self, guid: uuid4, verdict: bool, bid: str, metadata: VerdictMetadata, **kwargs):
         self.guid = guid
         self.verdict = verdict
         self.bid = bid
+        if not isinstance(metadata, VerdictMetadata):
+            raise ValueError
         self.metadata = metadata
 
     @property
@@ -85,7 +90,7 @@ class VoteTransaction(Transaction):
     guid: uuid4
     vote: bool
 
-    def __init__(self, guid, vote):
+    def __init__(self, guid: uuid4, vote: bool, **kwargs):
         self.guid = guid
         self.vote = vote
 

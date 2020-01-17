@@ -12,3 +12,11 @@ class InvalidSignatureError(PolySwarmTransactionException):
 
 class WrongSignatureError(PolySwarmTransactionException):
     pass
+
+
+class MissingTransactionError(PolySwarmTransactionException):
+    pass
+
+
+class UnsupportedTransactionError(PolySwarmTransactionException):
+    pass

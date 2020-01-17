@@ -74,12 +74,22 @@ response.raise_for_status()
 
 ```python
 from polyswarmtransaction import SignedTransaction
+from polyswarmtransaction.bounty import BountyTransaction
+from django.http import HttpResponse
 
 def bounty_view():
-
     data = request.POST.dict()
     signed = SignedTransaction(**data)
     
     # Public key is verified during recovery
     address = signed.ecrecover()
+    try:
+        bounty_transaaction = signed.transaction()
+    except (UnsupportedTransactionError, ValueError, ValidationError, WrongSignatureError, InvalidSignatureError):
+        return HttpResponse('', 400)
+
+    if not isinstance(bounty_transaaction, BountyTransaction):
+        return HttpResponse('', 400)
+
+    do_work(address, bounty_transaaction)
 ```
