@@ -20,7 +20,7 @@ setup(
     python_requires='>=3.6,<4',
     install_requires=[
         'hexbytes==0.2.0',
-        'dataclasses==0.7',
+        'dataclasses==0.7; python_version=="3.6"',
         'jsonschema==3.2.0',
         'polyswarm-artifact==1.3.2',
         'web3==5.4.0'
@@ -32,7 +32,6 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: Implementation :: PyPy",
