@@ -24,7 +24,7 @@ def test_recover_bounty_when_computed(ethereum_accounts):
             'reward': '2000000000000000000',
             'artifact': 'Qm',
             'artifact_type': 'FILE',
-            'expiration': 123,
+            'duration': 123,
             'metadata': [{'mimetype': ''}]
          }
     }
@@ -44,7 +44,7 @@ def test_sign_bounty_transaction(ethereum_accounts):
             'reward': '2000000000000000000',
             'artifact': 'Qm',
             'artifact_type': 'FILE',
-            'expiration': 123,
+            'duration': 123,
             'metadata': [{'mimetype': ''}]
         }
     }
@@ -71,7 +71,7 @@ def test_recover_bounty_signed_transaction_from_parts():
             'reward': '2000000000000000000',
             'artifact': 'Qm',
             'artifact_type': 'FILE',
-            'expiration': 123,
+            'duration': 123,
             'metadata': [{'mimetype': ''}]
         }
     }
@@ -95,7 +95,7 @@ def test_load_bounty():
             'reward': '2000000000000000000',
             'artifact': 'Qm',
             'artifact_type': 'FILE',
-            'expiration': 123,
+            'duration': 123,
             'metadata': [{'mimetype': ''}]
         }
     }
@@ -120,7 +120,7 @@ def test_load_bounty_bad_metadata():
             'reward': '2000000000000000000',
             'artifact': 'Qm',
             'artifact_type': 'FILE',
-            'expiration': 123,
+            'duration': 123,
             'metadata': []
         }
     }
@@ -138,7 +138,7 @@ def test_load_bounty_bad_artifact_type():
             'reward': '2000000000000000000',
             'artifact': 'Qm',
             'artifact_type': 'FAKE',
-            'expiration': 123,
+            'duration': 123,
             'metadata': [{'mimetype': ''}]
         }
     }

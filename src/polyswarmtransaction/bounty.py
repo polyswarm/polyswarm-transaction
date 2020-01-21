@@ -14,7 +14,7 @@ class BountyTransaction(Transaction):
     reward: str
     artifact: str
     artifact_type: str
-    expiration: int
+    duration: int
     metadata: List[Dict[str, Any]]
 
     def __post_init__(self):

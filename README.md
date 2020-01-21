@@ -61,7 +61,7 @@ from polyswarmtransaction.bounty import BountyTransaction
 demo_account = w3.eth.account.from_key([0] * 32)
 
 
-transaction = BountyTransaction(guid, reward, artifact, artifact_type, metadata, expiration)
+transaction = BountyTransaction(guid, reward, artifact, artifact_type, metadata, duration)
 signed = transaction.sign(demo_account.key)
 
 # Send as form data so server doesn't load json string
