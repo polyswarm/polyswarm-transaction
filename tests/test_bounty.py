@@ -34,8 +34,8 @@ def test_recover_bounty_when_computed(ethereum_accounts):
 
 
 def test_sign_bounty_transaction(ethereum_accounts):
-    signature = '0x64c865beaac6f182a579a373879e3f161a121ac756fa6f4cdec6e1ad6db988592b8314fcfbe6d07f324a581abdde9445cc' \
-                '211154faf6399e10d5f8293be3de8201'
+    signature = '0x19b5171136a9606ac7845f4ded15197236134bd357e98b56379c42fffdc4dcfd6d97f3e3436f885f25949862f6eaf6d9be' \
+                '13cb119b103a098e30040b6279692901'
     data = {
         'name': 'polyswarmtransaction.bounty:BountyTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
@@ -61,8 +61,8 @@ def test_recover_bounty_signed_transaction(ethereum_accounts):
 
 
 def test_recover_bounty_signed_transaction_from_parts():
-    signature = '0x64c865beaac6f182a579a373879e3f161a121ac756fa6f4cdec6e1ad6db988592b8314fcfbe6d07f324a581abdde9445cc' \
-                '211154faf6399e10d5f8293be3de8201'
+    signature = '0x19b5171136a9606ac7845f4ded15197236134bd357e98b56379c42fffdc4dcfd6d97f3e3436f885f25949862f6eaf6d9be' \
+                '13cb119b103a098e30040b6279692901'
     data = {
         'name': 'polyswarmtransaction.bounty:BountyTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
@@ -102,13 +102,13 @@ def test_load_bounty():
     signed = SignedTransaction(json.dumps(data), bytes([0] * 65))
     assert isinstance(signed.transaction(), BountyTransaction)
     assert not DeepDiff(signed.transaction().data,
-                    BountyTransaction('test',
-                                      '2000000000000000000',
-                                      'Qm',
-                                      ArtifactType.FILE.name,
-                                      123,
-                                      BOUNTY_METADATA).data,
-                    ignore_order=True)
+                        BountyTransaction('test',
+                                          '2000000000000000000',
+                                          'Qm',
+                                          ArtifactType.FILE.name,
+                                          123,
+                                          BOUNTY_METADATA).data,
+                        ignore_order=True)
 
 
 def test_load_bounty_bad_metadata():
@@ -190,13 +190,13 @@ def test_sign_full_metadata(ethereum_accounts):
             }
          }
     }
-    metadata = json.loads(VerdictMetadata()\
-        .set_malware_family('')\
-        .set_scanner('test-os', 'test-arch', '1.0.0', '2.8.0', '0.1.0', '1')\
-        .add_domain('test-domain')\
-        .add_ip_address('127.0.0.1')\
-        .add_stix_signature('', 'test-stix')\
-        .add_extra('extra', 'extra').json())
+    metadata = json.loads(VerdictMetadata()
+                          .set_malware_family('')
+                          .set_scanner('test-os', 'test-arch', '1.0.0', '2.8.0', '0.1.0', '1')
+                          .add_domain('test-domain')
+                          .add_ip_address('127.0.0.1')
+                          .add_stix_signature('', 'test-stix')
+                          .add_extra('extra', 'extra').json())
 
     transaction = AssertionTransaction('test', True, '1000000000000000000', metadata)
     signed = transaction.sign(ethereum_accounts[0].key)
@@ -267,8 +267,8 @@ def test_load_assertion():
     signed = SignedTransaction(json.dumps(data), bytes([0] * 65))
     assert isinstance(signed.transaction(), AssertionTransaction)
     assert not DeepDiff(signed.transaction().data,
-                    AssertionTransaction('test', True, '1000000000000000000', ASSERTION_METADATA).data,
-                    ignore_order=True)
+                        AssertionTransaction('test', True, '1000000000000000000', ASSERTION_METADATA).data,
+                        ignore_order=True)
 
 
 def test_load_assertion_bad_metadata():
