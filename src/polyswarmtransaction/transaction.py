@@ -37,7 +37,7 @@ TRANSACTION_SCHEMA = {
 }
 
 
-@dataclasses.dataclass(init=True)
+@dataclasses.dataclass
 class Transaction:
     @property
     def data(self) -> Dict[str, Any]:

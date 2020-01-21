@@ -8,7 +8,7 @@ from polyswarmartifact.schema.bounty import Bounty as BountyMetadata
 from polyswarmartifact.schema.verdict import Verdict as VerdictMetadata
 
 
-@dataclasses.dataclass(init=True)
+@dataclasses.dataclass
 class BountyTransaction(Transaction):
     guid: uuid4
     reward: str
@@ -25,7 +25,7 @@ class BountyTransaction(Transaction):
             raise KeyError
 
 
-@dataclasses.dataclass(init=True)
+@dataclasses.dataclass
 class AssertionTransaction(Transaction):
     guid: uuid4
     verdict: bool
@@ -37,7 +37,7 @@ class AssertionTransaction(Transaction):
             raise ValueError
 
 
-@dataclasses.dataclass(init=True)
+@dataclasses.dataclass
 class VoteTransaction(Transaction):
     guid: uuid4
     vote: bool
