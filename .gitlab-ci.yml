@@ -1,0 +1,68 @@
+image: $REPO_URL/stage
+
+services:
+  - docker:dind
+
+stages:
+  - build
+  - test
+  - release
+
+variables:
+  DOCKER_HOST: tcp://localhost:2375/
+
+###############################################################
+# Build Stage (jobs inside a stage run in parallel)
+###############################################################
+
+###############################################################
+# Test Stage
+###############################################################
+test-py36:
+  image: python:3.6
+  stage: test
+  tags:
+    - kube
+  before_script:
+    - pip3 install tox
+  script:
+    - tox -e py36
+  except:
+    - images
+
+test-py37:
+  image: python:3.7
+  stage: test
+  tags:
+    - kube
+  before_script:
+    - pip3 install tox
+  script:
+    - tox -e py37
+  except:
+    - images
+
+###############################################################
+# Release Stage
+###############################################################
+release:
+  stage: release
+  tags:
+    - kube
+  only:
+    - tags
+  script:
+    - python setup.py sdist bdist_wheel
+
+    # check git tag version vs setup.py version. bail if not equal.
+    - >-
+      tagver=$(git describe --abbrev=0 --tags)
+      setupver=$(grep "__version__ = " src/polyswarmtransaction/__init__.py | cut -d"'" -f 2)
+
+      if [ $tagver != $setupver ]; then
+        echo "git tag version ($tagver) does not match setup.py version ($setupver)"
+        exit 1
+      fi
+
+    # using env variables from Gitlab: TWINE_USERNAME, TWINE_PASSWORD, TWINE_REPOSITORY_URL
+    - twine upload dist/*
