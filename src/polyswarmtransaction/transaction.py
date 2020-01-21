@@ -21,7 +21,7 @@ TRANSACTION_SCHEMA = {
     "properties": {
         "name": {
             "type": "string",
-            "pattern": "^.*:.*$"
+            "pattern": "^[^:]+:[^:]+$"
         },
         "from": {
             "type": "string",
