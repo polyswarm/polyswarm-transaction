@@ -1,5 +1,6 @@
 import json
 
+from deepdiff import DeepDiff
 from eth_keys.datatypes import PrivateKey
 from web3 import Web3
 
@@ -73,4 +74,4 @@ def test_load_withdrawal():
     }
     signed = SignedTransaction(json.dumps(data), bytes([0] * 65))
     assert isinstance(signed.transaction(), WithdrawalTransaction)
-    assert signed.transaction().data == WithdrawalTransaction('200000000000000000').data
+    assert not DeepDiff(signed.transaction().data, WithdrawalTransaction('200000000000000000').data, ignore_order=True)

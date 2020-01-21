@@ -1,6 +1,7 @@
 import json
-
 import pytest
+
+from deepdiff import DeepDiff
 from eth_keys.datatypes import PrivateKey
 from web3 import Web3
 
@@ -100,8 +101,14 @@ def test_load_bounty():
     }
     signed = SignedTransaction(json.dumps(data), bytes([0] * 65))
     assert isinstance(signed.transaction(), BountyTransaction)
-    assert signed.transaction().data == \
-        BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.name, 123, BOUNTY_METADATA).data
+    assert not DeepDiff(signed.transaction().data,
+                    BountyTransaction('test',
+                                      '2000000000000000000',
+                                      'Qm',
+                                      ArtifactType.FILE.name,
+                                      123,
+                                      BOUNTY_METADATA).data,
+                    ignore_order=True)
 
 
 def test_load_bounty_bad_metadata():
@@ -259,8 +266,9 @@ def test_load_assertion():
     }
     signed = SignedTransaction(json.dumps(data), bytes([0] * 65))
     assert isinstance(signed.transaction(), AssertionTransaction)
-    assert signed.transaction().data == \
-        AssertionTransaction('test', True, '1000000000000000000', ASSERTION_METADATA).data
+    assert not DeepDiff(signed.transaction().data,
+                    AssertionTransaction('test', True, '1000000000000000000', ASSERTION_METADATA).data,
+                    ignore_order=True)
 
 
 def test_load_assertion_bad_metadata():
@@ -349,4 +357,4 @@ def test_load_vote():
     }
     signed = SignedTransaction(json.dumps(data), bytes([0] * 65))
     assert isinstance(signed.transaction(), VoteTransaction)
-    assert signed.transaction().data == VoteTransaction('test', True).data
+    assert not DeepDiff(signed.transaction().data, VoteTransaction('test', True).data, ignore_order=True)
