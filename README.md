@@ -84,12 +84,12 @@ def bounty_view():
     # Public key is verified during recovery
     address = signed.ecrecover()
     try:
-        bounty_transaaction = signed.transaction()
+        bounty_transaction = signed.transaction()
     except (UnsupportedTransactionError, ValueError, ValidationError, WrongSignatureError, InvalidSignatureError):
         return HttpResponse('', 400)
 
-    if not isinstance(bounty_transaaction, BountyTransaction):
+    if not isinstance(bounty_transaction, BountyTransaction):
         return HttpResponse('', 400)
 
-    do_work(address, bounty_transaaction)
+    do_work(address, bounty_transaction)
 ```
