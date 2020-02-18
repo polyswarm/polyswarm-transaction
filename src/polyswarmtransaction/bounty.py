@@ -13,7 +13,7 @@ class BountyTransaction(Transaction):
     guid: uuid4
     reward: str
     artifact: str
-    artifact_type: str
+    artifact_type: int
     duration: int
     metadata: List[Dict[str, Any]]
 
@@ -21,8 +21,8 @@ class BountyTransaction(Transaction):
         if not BountyMetadata.validate(self.metadata):
             raise ValueError
 
-        if not ArtifactType.from_string(self.artifact_type):
-            raise KeyError
+        if not ArtifactType(self.artifact_type):
+            raise ValueError
 
 
 @dataclasses.dataclass
