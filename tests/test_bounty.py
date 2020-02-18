@@ -23,19 +23,19 @@ def test_recover_bounty_when_computed(ethereum_accounts):
             'guid': 'test',
             'reward': '2000000000000000000',
             'artifact': 'Qm',
-            'artifact_type': 'FILE',
+            'artifact_type': 0,
             'duration': 123,
             'metadata': [{'mimetype': ''}]
          }
     }
-    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.name, 123, BOUNTY_METADATA)
+    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.value, 123, BOUNTY_METADATA)
     signed = transaction.sign(ethereum_accounts[0].key)
     assert signed.signature == PrivateKey(ethereum_accounts[0].key).sign_msg_hash(Web3.keccak(text=json.dumps(data)))
 
 
 def test_sign_bounty_transaction(ethereum_accounts):
-    signature = '0x19b5171136a9606ac7845f4ded15197236134bd357e98b56379c42fffdc4dcfd6d97f3e3436f885f25949862f6eaf6d9be' \
-                '13cb119b103a098e30040b6279692901'
+    signature = '0x2593843d5ef54ba3588e2d8a9a2b205124612787d7309736ae430dc99c0e797b2ac7975ffc405ff551ef17ae16993fdfca' \
+                '22310cb71d638d8971ec51cefd49ec01'
     data = {
         'name': 'polyswarmtransaction.bounty:BountyTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
@@ -43,26 +43,26 @@ def test_sign_bounty_transaction(ethereum_accounts):
             'guid': 'test',
             'reward': '2000000000000000000',
             'artifact': 'Qm',
-            'artifact_type': 'FILE',
+            'artifact_type': 0,
             'duration': 123,
             'metadata': [{'mimetype': ''}]
         }
     }
-    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.name, 123, BOUNTY_METADATA)
+    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.value, 123, BOUNTY_METADATA)
     signed = transaction.sign(ethereum_accounts[0].key)
     assert signed.raw_transaction == json.dumps(data)
     assert signed.signature.hex() == signature
 
 
 def test_recover_bounty_signed_transaction(ethereum_accounts):
-    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.name, 123, BOUNTY_METADATA)
+    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.value, 123, BOUNTY_METADATA)
     signed = transaction.sign(ethereum_accounts[0].key)
     assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
 
 
 def test_recover_bounty_signed_transaction_from_parts():
-    signature = '0x19b5171136a9606ac7845f4ded15197236134bd357e98b56379c42fffdc4dcfd6d97f3e3436f885f25949862f6eaf6d9be' \
-                '13cb119b103a098e30040b6279692901'
+    signature = '0x2593843d5ef54ba3588e2d8a9a2b205124612787d7309736ae430dc99c0e797b2ac7975ffc405ff551ef17ae16993fdfca' \
+                '22310cb71d638d8971ec51cefd49ec01'
     data = {
         'name': 'polyswarmtransaction.bounty:BountyTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
@@ -70,7 +70,7 @@ def test_recover_bounty_signed_transaction_from_parts():
             'guid': 'test',
             'reward': '2000000000000000000',
             'artifact': 'Qm',
-            'artifact_type': 'FILE',
+            'artifact_type': 0,
             'duration': 123,
             'metadata': [{'mimetype': ''}]
         }
@@ -80,7 +80,7 @@ def test_recover_bounty_signed_transaction_from_parts():
 
 
 def test_recover_bounty_signed_transaction_from_signed_output(ethereum_accounts):
-    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.name, 123, BOUNTY_METADATA)
+    transaction = BountyTransaction('test', '2000000000000000000', 'Qm', ArtifactType.FILE.value, 123, BOUNTY_METADATA)
     signed = transaction.sign(ethereum_accounts[0].key)
     signed = SignedTransaction(**signed.payload)
     assert signed.ecrecover() == '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
@@ -94,7 +94,7 @@ def test_load_bounty():
             'guid': 'test',
             'reward': '2000000000000000000',
             'artifact': 'Qm',
-            'artifact_type': 'FILE',
+            'artifact_type': 0,
             'duration': 123,
             'metadata': [{'mimetype': ''}]
         }
@@ -105,7 +105,7 @@ def test_load_bounty():
                         BountyTransaction('test',
                                           '2000000000000000000',
                                           'Qm',
-                                          ArtifactType.FILE.name,
+                                          ArtifactType.FILE.value,
                                           123,
                                           BOUNTY_METADATA).data,
                         ignore_order=True)
@@ -119,7 +119,7 @@ def test_load_bounty_bad_metadata():
             'guid': 'test',
             'reward': '2000000000000000000',
             'artifact': 'Qm',
-            'artifact_type': 'FILE',
+            'artifact_type': 0,
             'duration': 123,
             'metadata': []
         }
@@ -137,13 +137,13 @@ def test_load_bounty_bad_artifact_type():
             'guid': 'test',
             'reward': '2000000000000000000',
             'artifact': 'Qm',
-            'artifact_type': 'FAKE',
+            'artifact_type': 4,
             'duration': 123,
             'metadata': [{'mimetype': ''}]
         }
     }
     signed = SignedTransaction(json.dumps(data), bytes([0] * 65))
-    with pytest.raises(KeyError):
+    with pytest.raises(ValueError):
         assert signed.transaction()
 
 
