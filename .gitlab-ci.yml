@@ -11,6 +11,7 @@ stages:
 
 variables:
   DOCKER_HOST: tcp://localhost:2375/
+  BASE_IMAGE_NAME: polyswarm-transaction
 
 ###############################################################
 # Build Stage (jobs inside a stage run in parallel)
