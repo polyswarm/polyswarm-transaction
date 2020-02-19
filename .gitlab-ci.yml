@@ -6,6 +6,7 @@ services:
 stages:
   - build
   - test
+  - e2e
   - release
 
 variables:
