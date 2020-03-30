@@ -44,6 +44,7 @@ test-py36:
   stage: test
   tags:
     - kube
+  coverage: '/TOTAL.*\s+(\d+%)$/'
   before_script:
     - pip3 install tox
   script:
@@ -56,6 +57,7 @@ test-py37:
   stage: test
   tags:
     - kube
+  coverage: '/TOTAL.*\s+(\d+%)$/'
   before_script:
     - pip3 install tox
   script:
@@ -67,6 +69,7 @@ test-image:
   stage: test
   tags:
     - kube
+  coverage: '/TOTAL.*\s+(\d+%)$/'
   script:
     - docker pull $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA
     - docker run $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA pytest -s --cov=polyswarmtransaction

@@ -1,0 +1,13 @@
+[run]
+branch = True
+concurrency =
+    thread
+    multiprocessing
+include =
+    ./*
+omit =
+    .*
+    ./.*
+    tests/*
+    */tests/*
+    .virtualenvs/*
