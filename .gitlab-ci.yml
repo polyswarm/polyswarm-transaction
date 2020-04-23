@@ -8,6 +8,7 @@ stages:
   - test
   - e2e
   - release
+  - trigger
 
 variables:
   DOCKER_HOST: tcp://localhost:2375/
@@ -127,3 +128,13 @@ release-pypi:
 
     # using env variables from Gitlab: TWINE_USERNAME, TWINE_PASSWORD, TWINE_REPOSITORY_URL
     - twine upload dist/*
+
+###############################################################
+# Trigger other CI builds
+###############################################################
+
+rebuild-polyswarmd-fast:
+  stage: trigger
+  only:
+    - master
+  trigger: externalci/polyswarmd-fast
