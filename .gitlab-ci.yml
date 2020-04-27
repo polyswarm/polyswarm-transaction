@@ -141,3 +141,5 @@ rebuild-polyswarmd-fast:
   only:
     - master
   trigger: externalci/polyswarmd-fast
+  variables:
+    BASE_IMAGE_NAME: polyswarmd-fast
