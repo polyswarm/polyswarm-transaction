@@ -143,3 +143,11 @@ rebuild-polyswarmd-fast:
   trigger: externalci/polyswarmd-fast
   variables:
     BASE_IMAGE_NAME: polyswarmd-fast
+
+rebuild-polyswarm-client-fast:
+  stage: trigger
+  only:
+    - master
+  trigger: externalci/polyswarm-client-fast
+  variables:
+    BASE_IMAGE_NAME: polyswarm-client
