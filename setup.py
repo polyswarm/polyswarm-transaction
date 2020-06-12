@@ -19,11 +19,11 @@ setup(
     license='MIT',
     python_requires='>=3.6,<4',
     install_requires=[
-        'hexbytes==0.2.0',
-        'dataclasses==0.7; python_version=="3.6"',
-        'jsonschema==3.2.0',
-        'polyswarm-artifact==1.3.2',
-        'web3==5.4.0'
+        'hexbytes>=0.2.0',
+        'dataclasse>=; python_version=="3.6"',
+        'jsonschema>=3.0.2',
+        'polyswarm-artifact>=1.3.3',
+        'web3>=5.4.0'
     ],
     include_package_data=True,
     packages=find_packages('src'),
