@@ -20,7 +20,7 @@ setup(
     python_requires='>=3.6,<4',
     install_requires=[
         'hexbytes>=0.2.0',
-        'dataclasse>=; python_version=="3.6"',
+        'dataclasses>=0.7; python_version=="3.6"',
         'jsonschema>=3.0.2',
         'polyswarm-artifact>=1.3.3',
         'web3>=5.4.0'
