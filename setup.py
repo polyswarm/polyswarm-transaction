@@ -27,7 +27,7 @@ setup(
     ],
     include_package_data=True,
     packages=find_packages('src'),
-    package_dir={'': 'src/'},
+    package_dir={'': 'src'},
     classifiers=[
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
