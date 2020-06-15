@@ -9,7 +9,7 @@ with open("README.md", "r") as readme:
 
 setup(
     name='polyswarm-transaction',
-    version='0.1.0',
+    version='0.2.0',
     description='Library for building & signing transactions for the PolySwarm sidechain',
     long_description=long_description,
     long_description_content_type="text/markdown",
