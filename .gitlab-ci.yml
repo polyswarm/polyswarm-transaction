@@ -107,8 +107,10 @@ release-latest:
     - docker pull $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA
     # Creates new tags for this image, one that should go to AWS and another to DockerHub with the tag "latest"
     - docker tag $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA $REPO_URL/$BASE_IMAGE_NAME:latest
+    - docker tag $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA polyswarm/$BASE_IMAGE_NAME:latest
     # Pushes to AWS
     - docker push $REPO_URL/$BASE_IMAGE_NAME:latest
+    - docker push polyswarm/$BASE_IMAGE_NAME:latest
 
 release-pypi:
   stage: release
