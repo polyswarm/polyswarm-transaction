@@ -122,7 +122,7 @@ release-pypi:
     # check git tag version vs setup.py version. bail if not equal.
     - >-
       tagver=$(git describe --abbrev=0 --tags)
-      setupver=$(grep "__version__ = " src/polyswarmconfig/__init__.py | cut -d"'" -f 2)
+      setupver=$(grep "__version__ = " src/polyswarmtransaction/__init__.py | cut -d"'" -f 2)
 
       if [ $tagver != $setupver ]; then
         echo "git tag version ($tagver) does not match setup.py version ($setupver)"
@@ -148,6 +148,6 @@ rebuild-polyswarm-client-fast:
   stage: trigger
   only:
     - master
-  trigger: externalci/polyswarm-client-fast
+  trigger: externalci/polyswarm-client
   variables:
     BASE_IMAGE_NAME: polyswarm-client
