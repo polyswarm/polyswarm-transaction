@@ -148,3 +148,24 @@ class SignedTransaction:
             raise exceptions.UnsupportedTransactionError(f'{module.__name__}:{class_name} is not a Transaction')
 
         return transaction
+
+
+@dataclasses.dataclass
+class CustomTransaction(Transaction):
+    raw_body: str = None
+    data_body: str = None
+
+    @property
+    def data(self) -> Dict[str, Any]:
+        return json.loads(self.data_body)
+
+    def __message(self, public_key: PublicKey) -> str:
+        if self.raw_body is not None:
+            return self.raw_body
+
+        body = {
+            "name": f'{self.__class__.__module__}:{self.__class__.__name__}',
+            "from": public_key.to_checksum_address(),
+            "data": self.data
+        }
+        return json.dumps(body)

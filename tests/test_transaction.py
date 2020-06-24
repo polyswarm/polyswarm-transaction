@@ -9,7 +9,7 @@ from web3 import Web3
 
 from polyswarmtransaction.exceptions import InvalidKeyError, InvalidSignatureError, WrongSignatureError, \
     UnsupportedTransactionError
-from polyswarmtransaction.transaction import Transaction, SignedTransaction
+from polyswarmtransaction.transaction import Transaction, SignedTransaction, CustomTransaction
 
 
 def test_recover_when_computed(ethereum_accounts):
@@ -32,6 +32,23 @@ def test_sign_transaction(ethereum_accounts):
         'data': {}
     }
     transaction = Transaction()
+    signed = transaction.sign(ethereum_accounts[0].key)
+    assert json.loads(signed.raw_transaction) == data
+    assert signed.signature.hex() == expected
+
+
+def test_sign_customtransaction_data_body(ethereum_accounts):
+    expected = '0xbd112f273df4e3a7d1b97525513c41f42e737c513bad190d74eb92947869747415a857110b02a17cc37f1a0e80514efd94c' \
+               'e807196a90cbc88a09377faf202e200'
+
+    custom_data = {'spam': 'eggs', 'pi': 3, 'it_moves': True}
+
+    data = {
+        'name': 'polyswarmtransaction.transaction:CustomTransaction',
+        'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
+        'data': custom_data,
+    }
+    transaction = CustomTransaction(data_body=json.dumps(custom_data))
     signed = transaction.sign(ethereum_accounts[0].key)
     assert json.loads(signed.raw_transaction) == data
     assert signed.signature.hex() == expected
