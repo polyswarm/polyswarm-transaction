@@ -52,6 +52,7 @@ def test_sign_customtransaction_data_body(ethereum_accounts):
     signed = transaction.sign(ethereum_accounts[0].key)
     assert json.loads(signed.raw_transaction) == data
     assert signed.signature.hex() == expected
+    assert isinstance(signed.transaction(), CustomTransaction)
 
 
 def test_recover_signed_transaction(ethereum_accounts):

@@ -155,6 +155,12 @@ class CustomTransaction(Transaction):
     raw_body: str = None
     data_body: str = None
 
+    def __init__(self, data_body=None, *args, **kwargs):
+        if data_body is None:
+            data_body = json.dumps(args or kwargs)
+        self.data_body = data_body
+        return super().__init__()
+
     @property
     def data(self) -> Dict[str, Any]:
         return json.loads(self.data_body)
