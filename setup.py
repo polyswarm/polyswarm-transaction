@@ -24,7 +24,7 @@ setup(
         'jsonschema>=3.0.2',
         'polyswarm-artifact>=1.3.3',
         'web3>=5.4.0',
-        'click>=7.0',
+        'click>=6.7',
     ],
     include_package_data=True,
     packages=find_packages('src'),
