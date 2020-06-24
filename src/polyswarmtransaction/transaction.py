@@ -152,7 +152,6 @@ class SignedTransaction:
 
 @dataclasses.dataclass
 class CustomTransaction(Transaction):
-    raw_body: str = None
     data_body: str = None
 
     def __init__(self, data_body=None, *args, **kwargs):
@@ -166,9 +165,6 @@ class CustomTransaction(Transaction):
         return json.loads(self.data_body)
 
     def __message(self, public_key: PublicKey) -> str:
-        if self.raw_body is not None:
-            return self.raw_body
-
         body = {
             "name": f'{self.__class__.__module__}:{self.__class__.__name__}',
             "from": public_key.to_checksum_address(),
