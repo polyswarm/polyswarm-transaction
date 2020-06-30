@@ -14,6 +14,10 @@ class WrongSignatureError(PolySwarmTransactionException):
     pass
 
 
+class WrongPayloadError(PolySwarmTransactionException):
+    pass
+
+
 class MissingTransactionError(PolySwarmTransactionException):
     pass
 
