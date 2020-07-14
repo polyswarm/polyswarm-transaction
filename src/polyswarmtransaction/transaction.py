@@ -59,6 +59,9 @@ class Transaction:
 
     @staticmethod
     def load_key(private_key: HexBytes) -> PrivateKey:
+        if isinstance(private_key, PrivateKey):
+            return private_key
+
         try:
             return PrivateKey(private_key)
         except ValidationError:
