@@ -2,7 +2,7 @@ import getpass
 import json
 
 import click
-import web3
+from web3.auto import w3
 
 from .transaction import CustomTransaction, HexBytes
 
@@ -18,7 +18,7 @@ def main(payload, keyfile, password):
 
     `password` will be prompted on tty if not provided via --password option
     """
-    private_key: HexBytes = web3.eth.Account.decrypt(keyfile.read(), password or getpass.getpass())
+    private_key: HexBytes = web3.eth.account.decrypt(keyfile.read(), password or getpass.getpass())
     transaction = CustomTransaction(data_body=payload.read())
     signed = transaction.sign(private_key)
     click.echo(json.dumps(signed.payload))
