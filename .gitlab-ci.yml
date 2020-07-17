@@ -35,24 +35,6 @@ dev-pypi:
     - python setup.py -q bdist_wheel
     - twine upload --skip-existing --disable-progress-bar --non-interactive dist/*
 
-build:
-  stage: build
-  tags:
-    - kube
-  script:
-     # try to download a cache image
-     - docker pull $REPO_URL/$BASE_IMAGE_NAME:latest || true
-     # explicitly pull the latest version of the dependant image
-     - docker pull python:3.6-stretch
-     - docker build
-       -f docker/Dockerfile
-       -t $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA
-       -t $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_REF_SLUG
-       --cache-from=$REPO_URL/$BASE_IMAGE_NAME:latest
-       .
-     - docker push $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA
-     - docker push $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_REF_SLUG
-
 ###############################################################
 # Test Stage
 ###############################################################
@@ -82,15 +64,18 @@ test-py37:
   except:
     - images
 
-test-image:
+test-py38:
+  image: python:3.8.3
   stage: test
   tags:
     - kube
   coverage: '/TOTAL.*\s+(\d+%)$/'
+  before_script:
+    - pip3 install tox
   script:
-    - docker pull $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA
-    - docker run $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA pytest -s --cov=polyswarmtransaction
-
+    - tox -e py38
+  except:
+    - images
 
 ###############################################################
 # End-to-end Stage
@@ -111,47 +96,6 @@ e2e:
 ###############################################################
 # Release Stage
 ###############################################################
-
-
-release-tag:
-  stage: release
-  tags:
-    - kube
-  only:
-    - tags
-  script:
-    # Gets the current image that was built in the CI for this commit
-    - docker pull $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA
-    # Creates new tags for this image, one that should go to AWS and another to DockerHub with the tag from git
-    - docker tag $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA $REPO_URL/$BASE_IMAGE_NAME:$(git describe --tags --abbrev=0)
-    - docker tag $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA polyswarm/$BASE_IMAGE_NAME:$(git describe --tags --abbrev=0)
-    # Pushes to AWS
-    - docker push $REPO_URL/$BASE_IMAGE_NAME:$(git describe --tags --abbrev=0)
-    # Pushes to DockerHub
-    - docker logout
-    - docker login -u $CI_CUSTOM_DOCKER_HUB_USERNAME -p $CI_CUSTOM_DOCKER_HUB_PASSWORD
-    - docker push polyswarm/$BASE_IMAGE_NAME:$(git describe --tags --abbrev=0)
-
-
-release-latest:
-  stage: release
-  tags:
-    - kube
-  only:
-    - master
-  script:
-    # Gets the current image that was built in the CI for this commit
-    - docker pull $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA
-    # Creates new tags for this image, one that should go to AWS and another to DockerHub with the tag "latest"
-    - docker tag $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA $REPO_URL/$BASE_IMAGE_NAME:latest
-    - docker tag $REPO_URL/$BASE_IMAGE_NAME:$CI_COMMIT_SHA polyswarm/$BASE_IMAGE_NAME:latest
-    # Pushes to AWS
-    - docker push $REPO_URL/$BASE_IMAGE_NAME:latest
-    # Pushes to DockerHub
-    - docker logout
-    - docker login -u $CI_CUSTOM_DOCKER_HUB_USERNAME -p $CI_CUSTOM_DOCKER_HUB_PASSWORD
-    - docker push polyswarm/$BASE_IMAGE_NAME:latest
-
 release-pypi:
   tags:
     - kube
@@ -169,19 +113,3 @@ release-pypi:
 ###############################################################
 # Trigger other CI builds
 ###############################################################
-
-rebuild-polyswarmd-fast:
-  stage: trigger
-  only:
-    - master
-  trigger: externalci/polyswarmd-fast
-  variables:
-    BASE_IMAGE_NAME: polyswarmd-fast
-
-rebuild-polyswarm-client-fast:
-  stage: trigger
-  only:
-    - master
-  trigger: externalci/polyswarm-client
-  variables:
-    BASE_IMAGE_NAME: polyswarm-client
