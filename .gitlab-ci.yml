@@ -78,22 +78,6 @@ test-py38:
     - images
 
 ###############################################################
-# End-to-end Stage
-###############################################################
-
-e2e:
-  stage: e2e
-  tags:
-    - kube
-  script:
-    - pip install $END_TO_END_LIB@$CI_COMMIT_REF_NAME || pip install $END_TO_END_LIB
-    - e2e init
-    - e2e run
-  only:
-    refs:
-      - master
-
-###############################################################
 # Release Stage
 ###############################################################
 release-pypi:
