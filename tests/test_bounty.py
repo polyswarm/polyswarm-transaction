@@ -34,8 +34,8 @@ def test_recover_bounty_when_computed(ethereum_accounts):
 
 
 def test_sign_bounty_transaction(ethereum_accounts):
-    signature = '0x2593843d5ef54ba3588e2d8a9a2b205124612787d7309736ae430dc99c0e797b2ac7975ffc405ff551ef17ae16993fdfca' \
-                '22310cb71d638d8971ec51cefd49ec01'
+    signature = ('0x2593843d5ef54ba3588e2d8a9a2b205124612787d7309736ae430dc99c0e797b2ac7975ffc405ff551ef17ae16993fdfca'
+                 '22310cb71d638d8971ec51cefd49ec01')
     data = {
         'name': 'polyswarmtransaction.bounty:BountyTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
@@ -61,8 +61,8 @@ def test_recover_bounty_signed_transaction(ethereum_accounts):
 
 
 def test_recover_bounty_signed_transaction_from_parts():
-    signature = '0x2593843d5ef54ba3588e2d8a9a2b205124612787d7309736ae430dc99c0e797b2ac7975ffc405ff551ef17ae16993fdfca' \
-                '22310cb71d638d8971ec51cefd49ec01'
+    signature = ('0x2593843d5ef54ba3588e2d8a9a2b205124612787d7309736ae430dc99c0e797b2ac7975ffc405ff551ef17ae16993fdfca'
+                 '22310cb71d638d8971ec51cefd49ec01')
     data = {
         'name': 'polyswarmtransaction.bounty:BountyTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
@@ -205,8 +205,8 @@ def test_sign_full_metadata(ethereum_accounts):
 
 
 def test_sign_assertion_transaction(ethereum_accounts):
-    signature = '0x0b2e16aff5f17c95434d06201514c20aed27d899649679cce01327afca495d3c17fc9f8f12551031aeae28a744be4fddf6' \
-                '8b46155b24472d6f9d0da0ffa5376c00'
+    signature = ('0x0b2e16aff5f17c95434d06201514c20aed27d899649679cce01327afca495d3c17fc9f8f12551031aeae28a744be4fddf6'
+                 '8b46155b24472d6f9d0da0ffa5376c00')
     data = {
         'name': 'polyswarmtransaction.bounty:AssertionTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
@@ -230,8 +230,8 @@ def test_recover_assertion_signed_transaction(ethereum_accounts):
 
 
 def test_recover_assertion_signed_transaction_from_parts():
-    signature = '0x0b2e16aff5f17c95434d06201514c20aed27d899649679cce01327afca495d3c17fc9f8f12551031aeae28a744be4fddf6' \
-                '8b46155b24472d6f9d0da0ffa5376c00'
+    signature = ('0x0b2e16aff5f17c95434d06201514c20aed27d899649679cce01327afca495d3c17fc9f8f12551031aeae28a744be4fddf6'
+                 '8b46155b24472d6f9d0da0ffa5376c00')
     data = {
         'name': 'polyswarmtransaction.bounty:AssertionTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
@@ -302,8 +302,8 @@ def test_recover_vote_when_computed(ethereum_accounts):
 
 
 def test_sign_vote_transaction(ethereum_accounts):
-    signature = '0xc04b6d31e94c26faa039b899e4c58adecc74bff57b3985668f5ba59ce27a0bf301d41b1b07a1117d6c16d6bb31a44da680' \
-                'e215178c121988462be4891d86935101'
+    signature = ('0xc04b6d31e94c26faa039b899e4c58adecc74bff57b3985668f5ba59ce27a0bf301d41b1b07a1117d6c16d6bb31a44da680'
+                 'e215178c121988462be4891d86935101')
     data = {
         'name': 'polyswarmtransaction.bounty:VoteTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
@@ -325,8 +325,8 @@ def test_recover_vote_signed_transaction(ethereum_accounts):
 
 
 def test_recover_vote_signed_transaction_from_parts():
-    signature = '0xc04b6d31e94c26faa039b899e4c58adecc74bff57b3985668f5ba59ce27a0bf301d41b1b07a1117d6c16d6bb31a44da680' \
-                'e215178c121988462be4891d86935101'
+    signature = ('0xc04b6d31e94c26faa039b899e4c58adecc74bff57b3985668f5ba59ce27a0bf301d41b1b07a1117d6c16d6bb31a44da680'
+                 'e215178c121988462be4891d86935101')
     data = {
         'name': 'polyswarmtransaction.bounty:VoteTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',

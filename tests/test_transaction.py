@@ -62,8 +62,8 @@ def test_recover_signed_transaction(ethereum_accounts):
 
 
 def test_recover_signed_transaction_from_parts():
-    signature = '0xed2e8602439eec57a84bb372c6de718d88d2c27f265d7c01fe59a940f9c44eb25f849639669897e376dca6b3e745f4d966' \
-                '732f731b6ec20d908673ad882aeed301'
+    signature = ('0xed2e8602439eec57a84bb372c6de718d88d2c27f265d7c01fe59a940f9c44eb25f849639669897e376dca6b3e745f4d966'
+                 '732f731b6ec20d908673ad882aeed301')
     # Must be a string exact match
     data = {
         'name': 'polyswarmtransaction.transaction:Transaction',
