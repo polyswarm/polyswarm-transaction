@@ -9,7 +9,7 @@ with open("README.md", "r") as readme:
 
 setup(
     name='polyswarm-transaction',
-    version='0.1.0',
+    version='0.3.0',
     description='Library for building & signing transactions for the PolySwarm sidechain',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -19,15 +19,16 @@ setup(
     license='MIT',
     python_requires='>=3.6,<4',
     install_requires=[
-        'hexbytes==0.2.0',
-        'dataclasses==0.7; python_version=="3.6"',
-        'jsonschema==3.2.0',
-        'polyswarm-artifact==1.3.2',
-        'web3==5.4.0'
+        'hexbytes>=0.2.0',
+        'dataclasses>=0.7; python_version=="3.6"',
+        'jsonschema>=3.0.2',
+        'polyswarm-artifact>=1.3.3',
+        'web3>=5.4.0',
+        'click>=6.7',
     ],
     include_package_data=True,
     packages=find_packages('src'),
-    package_dir={'': 'src/'},
+    package_dir={'': 'src'},
     classifiers=[
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",

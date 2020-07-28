@@ -40,11 +40,14 @@ The primary use case of this library is to define the protocol by which transact
 By simply overriding `Transaction` one can build any transactions that will easily conform to the standard.
 
 By default the following transactions are already defined.
- 
+
 1. `bounty.BountyTransaction`
 1. `bounty.AssertionTransaction`
 1. `bounty.VoteTransaction`
-1. `nectar.WithdrawalTransaction` 
+1. `nectar.WithdrawalTransaction`
+
+Is also defined a `transaction.CustomTransaction` accepting a `data_body`
+that you may handcraft for testing purposes.
 
 Using the `sign()` method, these transactions will be transformed into a json string and signature.
 This signature can be verified the `ecrecover` method on `SignedTransaction`
@@ -80,7 +83,7 @@ from django.http import HttpResponse
 def bounty_view():
     data = request.POST.dict()
     signed = SignedTransaction(**data)
-    
+
     # Public key is verified during recovery
     address = signed.ecrecover()
     try:
@@ -92,4 +95,26 @@ def bounty_view():
         return HttpResponse('', 400)
 
     do_work(address, bounty_transaction)
+```
+
+
+### Signing payloads from CLI
+
+For testing purposes is possible to sign arbitrary JSON payloads from commandline.
+They will all be encapsulated on a CustomTransaction before signing.
+
+Password should be provided via `-p/--password` or will be requested on /dev/tty
+
+The payload should be JSON and you can pipe it from STDIN:
+```console
+$ echo '"DEADBEEF"' | python -m polyswarmtransaction /path/to/keyfile -p mypassword
+{"raw_transaction": "{\"name\": \"polyswarmtransaction.transaction:CustomTransaction\", \"from\": \"0x05328f171b8c1463eaFDACCA478D9EE6a1d923F8\", \"data\": \"DEADBEEF\"}", "signature": "0x182195b3f7734ff2bb54545f29c3a961885c95bed4b989d7e9866dacd07090f258cffe8b9e39fb97435cd10d0f4131e7de59b76fce3ce7e3aa70874da39c949600"}
+```
+
+Payload can also be provided from a file via `--payload` option.
+The file still needs to contain a valid JSON.
+
+```console
+$ python -m polyswarmtransaction /path/to/keyfile --payload path/to/payload.json -p mypassword
+{"raw_transaction": "{\"name\": \"polyswarmtransaction.transaction:CustomTransaction\", \"from\": \"0x05328f171b8c1463eaFDACCA478D9EE6a1d923F8\", \"data\": ... \"}", "signature": "0x6ff71bfc58aa72bf4c8b0388c44d5151456a52eb1f1bc6f4825034cb96d0f2a90aa10afb3dd7aada15799bfb7a25f342e3e04ec02830807fde9222ad385ef6e700"}
 ```
