@@ -5,12 +5,12 @@ from eth_keys.datatypes import PrivateKey
 from web3 import Web3
 
 from polyswarmtransaction.transaction import SignedTransaction
-from polyswarmtransaction.nectar import WithdrawalTransaction, ApproveNectarRelease
+from polyswarmtransaction.nectar import WithdrawalTransaction, ApproveNectarReleaseTransaction
 
 
 def test_recover_release_when_computed(ethereum_accounts):
     data = {
-        'name': 'polyswarmtransaction.nectar:ApproveNectarRelease',
+        'name': 'polyswarmtransaction.nectar:ApproveNectarReleaseTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
         'data': {
             'destination': '0x0000000000000000000000000000000000000001',
@@ -20,7 +20,7 @@ def test_recover_release_when_computed(ethereum_accounts):
             'block_number': '0x1',
         }
     }
-    transaction = ApproveNectarRelease(destination='0x0000000000000000000000000000000000000001',
+    transaction = ApproveNectarReleaseTransaction(destination='0x0000000000000000000000000000000000000001',
                                        amount='200000000000000000',
                                        transaction_hash='0x0000000000000000000000000000000',
                                        block_hash='0x0000000000000000000000000000000',
@@ -46,7 +46,7 @@ def test_sign_release_transaction(ethereum_accounts):
     signature = ('0xf042ad34990ad9117a6bc0931842f6b82e1605979b41e28cd93ea256cfa4d4624c71082e383ddbb6795faa4843f3960cb' 
                  'fbca1e9aac375dd40c0136ed32946bb00')
     data = {
-        'name': 'polyswarmtransaction.nectar:ApproveNectarRelease',
+        'name': 'polyswarmtransaction.nectar:ApproveNectarReleaseTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
         'data': {
             'destination': '0x0000000000000000000000000000000000000001',
@@ -56,7 +56,7 @@ def test_sign_release_transaction(ethereum_accounts):
             'block_number': '0x1',
         }
     }
-    transaction = ApproveNectarRelease(destination='0x0000000000000000000000000000000000000001',
+    transaction = ApproveNectarReleaseTransaction(destination='0x0000000000000000000000000000000000000001',
                                        amount='200000000000000000',
                                        transaction_hash='0x0000000000000000000000000000000',
                                        block_hash='0x0000000000000000000000000000000',
@@ -83,7 +83,7 @@ def test_sign_withdrawal_transaction(ethereum_accounts):
 
 
 def test_recover_release_signed_transaction(ethereum_accounts):
-    transaction = ApproveNectarRelease(destination='0x0000000000000000000000000000000000000001',
+    transaction = ApproveNectarReleaseTransaction(destination='0x0000000000000000000000000000000000000001',
                                        amount='200000000000000000',
                                        transaction_hash='0x0000000000000000000000000000000',
                                        block_hash='0x0000000000000000000000000000000',
@@ -102,7 +102,7 @@ def test_recover_release_signed_transaction_from_parts():
     signature = ('0xf042ad34990ad9117a6bc0931842f6b82e1605979b41e28cd93ea256cfa4d4624c71082e383ddbb6795faa4843f3960cb' 
                  'fbca1e9aac375dd40c0136ed32946bb00')
     data = {
-        'name': 'polyswarmtransaction.nectar:ApproveNectarRelease',
+        'name': 'polyswarmtransaction.nectar:ApproveNectarReleaseTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
         'data': {
             'destination': '0x0000000000000000000000000000000000000001',
@@ -131,7 +131,7 @@ def test_recover_withdrawal_signed_transaction_from_parts():
 
 
 def test_recover_release_signed_transaction_from_signed_output(ethereum_accounts):
-    transaction = ApproveNectarRelease(destination='0x0000000000000000000000000000000000000001',
+    transaction = ApproveNectarReleaseTransaction(destination='0x0000000000000000000000000000000000000001',
                                        amount='200000000000000000',
                                        transaction_hash='0x0000000000000000000000000000000',
                                        block_hash='0x0000000000000000000000000000000',
@@ -150,7 +150,7 @@ def test_recover_withdrawal_signed_transaction_from_signed_output(ethereum_accou
 
 def test_load_approve_release():
     data = {
-        'name': 'polyswarmtransaction.nectar:ApproveNectarRelease',
+        'name': 'polyswarmtransaction.nectar:ApproveNectarReleaseTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
         'data': {
             'destination': '0x0000000000000000000000000000000000000001',
@@ -162,12 +162,12 @@ def test_load_approve_release():
     }
     signed = SignedTransaction(json.dumps(data), bytes([0] * 65))
 
-    approve_nct_release = ApproveNectarRelease(destination='0x0000000000000000000000000000000000000001',
+    approve_nct_release = ApproveNectarReleaseTransaction(destination='0x0000000000000000000000000000000000000001',
                                                amount='200000000000000000',
                                                transaction_hash='0x0000000000000000000000000000000',
                                                block_hash='0x0000000000000000000000000000000',
                                                block_number='0x1')
-    assert isinstance(signed.transaction(), ApproveNectarRelease)
+    assert isinstance(signed.transaction(), ApproveNectarReleaseTransaction)
     assert not DeepDiff(signed.transaction().data, approve_nct_release.data, ignore_order=True)
 
 
