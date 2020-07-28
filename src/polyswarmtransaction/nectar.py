@@ -9,7 +9,7 @@ class WithdrawalTransaction(Transaction):
 
 
 @dataclasses.dataclass
-class ApproveNectarRelease(Transaction):
+class ApproveNectarReleaseTransaction(Transaction):
     """
     Transaction from relay approving a NCT transfer from the source to the given address
     """
