@@ -43,8 +43,8 @@ def test_recover_withdrawal_when_computed(ethereum_accounts):
 
 
 def test_sign_release_transaction(ethereum_accounts):
-    signature = ('0xf042ad34990ad9117a6bc0931842f6b82e1605979b41e28cd93ea256cfa4d4624c71082e383ddbb6795faa4843f3960cb' 
-                 'fbca1e9aac375dd40c0136ed32946bb00')
+    signature = ('0x7f9f551b25397ed66c7aa0dbb5ad92a09ce5c976fa5492d0c3324fbd46b09cba7325d13b74038ab63cbcc369216983b94b'
+                 '507a876ee13eac8b95ff05a69de36200')
     data = {
         'name': 'polyswarmtransaction.nectar:ApproveNectarReleaseTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
@@ -99,8 +99,8 @@ def test_recover_withdrawal_signed_transaction(ethereum_accounts):
 
 
 def test_recover_release_signed_transaction_from_parts():
-    signature = ('0xf042ad34990ad9117a6bc0931842f6b82e1605979b41e28cd93ea256cfa4d4624c71082e383ddbb6795faa4843f3960cb' 
-                 'fbca1e9aac375dd40c0136ed32946bb00')
+    signature = ('0x7f9f551b25397ed66c7aa0dbb5ad92a09ce5c976fa5492d0c3324fbd46b09cba7325d13b74038ab63cbcc369216983b94b'
+                 '507a876ee13eac8b95ff05a69de36200')
     data = {
         'name': 'polyswarmtransaction.nectar:ApproveNectarReleaseTransaction',
         'from': '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5',
