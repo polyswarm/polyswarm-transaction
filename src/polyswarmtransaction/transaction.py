@@ -58,7 +58,11 @@ class Transaction:
         return json.dumps(body)
 
     @staticmethod
-    def load_key(private_key: HexBytes) -> PrivateKey:
+    def load_key(private_key: Union[HexBytes, PrivateKey]) -> PrivateKey:
+        if isinstance(private_key, PrivateKey):
+            # Lifts the need to convert to bytes and back to PrivateKey
+            return private_key
+
         try:
             return PrivateKey(private_key)
         except ValidationError:
