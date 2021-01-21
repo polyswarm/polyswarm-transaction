@@ -11,8 +11,11 @@ stages:
   - trigger
 
 variables:
-  DOCKER_HOST: tcp://localhost:2375/
   BASE_IMAGE_NAME: polyswarm-transaction
+  DOCKER_HOST: tcp://localhost:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
 
 default:
   before_script:
@@ -25,7 +28,7 @@ default:
 ###############################################################
 dev-pypi:
   tags:
-    - kube
+    - kube-small-new
   image: python:3.6
   stage: build
   before_script:
@@ -42,7 +45,7 @@ test-py36:
   image: python:3.6
   stage: test
   tags:
-    - kube
+    - kube-small-new
   coverage: '/TOTAL.*\s+(\d+%)$/'
   before_script:
     - pip3 install tox
@@ -55,7 +58,7 @@ test-py37:
   image: python:3.7
   stage: test
   tags:
-    - kube
+    - kube-small-new
   coverage: '/TOTAL.*\s+(\d+%)$/'
   before_script:
     - pip3 install tox
@@ -68,7 +71,7 @@ test-py38:
   image: python:3.8.3
   stage: test
   tags:
-    - kube
+    - kube-small-new
   coverage: '/TOTAL.*\s+(\d+%)$/'
   before_script:
     - pip3 install tox
@@ -82,7 +85,7 @@ test-py38:
 ###############################################################
 release-pypi:
   tags:
-    - kube
+    - kube-small-new
   stage: release
   script:
     # release to internal pypi but do not tag yet
