@@ -7,17 +7,6 @@ with open("README.md", "r") as readme:
     long_description = readme.read()
 
 
-def parse_requirements():
-    with open('requirements.txt', 'r') as f:
-        reqs = []
-        for r in f.read().splitlines():
-            if r.startswith('#'):
-                pass
-            elif '#egg=' in r:
-                reqs.append('{2} @ {0}'.format(*r.partition('#egg=')))
-            else:
-                reqs.append(r)
-
 
 setup(
     name='polyswarm-transaction',
@@ -30,7 +19,14 @@ setup(
     url='https://github.com/polyswarm/polyswarm-transaction',
     license='MIT',
     python_requires='>=3.6,<4',
-    install_requires=parse_requirements(),
+    install_requires=[
+        "dataclasses==0.7; python_version == '3.6'",
+        "hexbytes~=0.2.0",
+        "jsonschema~=3.2.0",
+        "polyswarm-artifact~=1.4.2",
+        "web3~=5.6.0",
+        "click~=7.1.2",
+    ],
     include_package_data=True,
     packages=find_packages('src'),
     package_dir={'': 'src'},

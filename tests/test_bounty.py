@@ -7,11 +7,12 @@ from web3 import Web3
 
 from polyswarmartifact import ArtifactType
 from polyswarmartifact.schema.bounty import Bounty as BountyMetadata
-from polyswarmartifact.schema.verdict import Verdict as VerdictMetadata
+from polyswarmartifact.schema.verdict import Verdict as VerdictMetadata, Scanner
 from polyswarmtransaction.transaction import SignedTransaction
 from polyswarmtransaction.bounty import BountyTransaction, AssertionTransaction, VoteTransaction
 
-BOUNTY_METADATA = json.loads(BountyMetadata().add_file_artifact('').json())
+
+BOUNTY_METADATA = json.loads(BountyMetadata().add_file_artifact(mimetype='').json())
 ASSERTION_METADATA = json.loads(VerdictMetadata().set_malware_family('').json())
 
 
@@ -173,26 +174,30 @@ def test_sign_full_metadata(ethereum_accounts):
             'bid': '1000000000000000000',
             'metadata': {
                 'malware_family': '',
-                'scanner': {
-                    'environment': {
-                        'operating_system': 'test-os',
-                        'architecture': 'test-arch',
-                    },
-                    'polyswarmclient_version': '2.8.0',
-                    'version': '1.0.0',
-                    'signatures_version': '0.1.0',
-                    'vendor_version': '1'
-                },
                 'domains': ['test-domain'],
                 'ip_addresses': ['127.0.0.1'],
                 'stix': [{'schema': '', 'signature': 'test-stix'}],
+                'scanner': {
+                    'version': '1.0.0',
+                    'polyswarmclient_version': '2.8.0',
+                    'vendor_version': '1',
+                    'signatures_version': '0.1.0',
+                    'environment': {
+                        'operating_system': 'test-os',
+                        'architecture': 'test-arch',
+                    }
+                },
                 'extra': 'extra'
             }
          }
     }
+
+    scanner = json.loads(
+        Scanner(environment={'operating_system': 'test-os', 'architecture': 'test-arch'}, version='1.0.0',
+                polyswarmclient_version='2.8.0', signatures_version='0.1.0', vendor_version='1').json())
     metadata = json.loads(VerdictMetadata()
                           .set_malware_family('')
-                          .set_scanner('test-os', 'test-arch', '1.0.0', '2.8.0', '0.1.0', '1')
+                          .set_scanner(**scanner)
                           .add_domain('test-domain')
                           .add_ip_address('127.0.0.1')
                           .add_stix_signature('', 'test-stix')
