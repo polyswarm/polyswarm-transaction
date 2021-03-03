@@ -1,0 +1,4 @@
+bumpversion~=0.5.3
+deepdiff~=4.0.9
+pytest~=5.4.2
+pytest-cov==2.8.1
