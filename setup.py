@@ -21,7 +21,7 @@ def parse_requirements():
 
 setup(
     name='polyswarm-transaction',
-    version='0.4.0',
+    version='0.4.1',
     description='Library for building & signing transactions for the PolySwarm sidechain',
     long_description=long_description,
     long_description_content_type="text/markdown",
