@@ -55,7 +55,7 @@ test-py36:
     - images
 
 test-py37:
-  image: $REPO_URL/python:3.7-slim-buster
+  image: $REPO_URL/python:3.7-buster
   stage: test
   tags:
     - kube-small-new
