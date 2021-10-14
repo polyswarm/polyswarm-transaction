@@ -1,21 +1,11 @@
 image: $REPO_URL/stage
 
-services:
-  - docker:dind
-
 stages:
   - build
   - test
   - e2e
   - release
   - trigger
-
-variables:
-  BASE_IMAGE_NAME: polyswarm-transaction
-  DOCKER_HOST: tcp://localhost:2376
-  DOCKER_TLS_CERTDIR: "/certs"
-  DOCKER_TLS_VERIFY: 1
-  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
 
 default:
   before_script:
@@ -29,7 +19,7 @@ default:
 dev-pypi:
   tags:
     - kube-small-new
-  image: python:3.6
+  image: $REPO_URL/python:3.6-stretch
   stage: build
   before_script:
     - pip3 install -q --upgrade pip setuptools twine wheel bump2version
@@ -42,7 +32,7 @@ dev-pypi:
 # Test Stage
 ###############################################################
 test-py36:
-  image: python:3.6
+  image: $REPO_URL/python:3.6-stretch
   stage: test
   tags:
     - kube-small-new
@@ -55,7 +45,7 @@ test-py36:
     - images
 
 test-py37:
-  image: python:3.7
+  image: $REPO_URL/python:3.7-buster
   stage: test
   tags:
     - kube-small-new
@@ -68,7 +58,7 @@ test-py37:
     - images
 
 test-py38:
-  image: python:3.8.3
+  image: $REPO_URL/python:3.8-buster
   stage: test
   tags:
     - kube-small-new
